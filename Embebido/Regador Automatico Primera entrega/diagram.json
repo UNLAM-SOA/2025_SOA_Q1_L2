@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "author": "KK",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-breadboard", "id": "bb1", "top": 35.4, "left": 22, "attrs": {} },
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": -177.7, "left": -91.4, "attrs": {} },
+    { "type": "wokwi-vcc", "id": "vcc1", "top": 0.76, "left": 691.2, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd1", "top": 86.4, "left": 690.6, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -126.1, "left": 287.8, "attrs": {} },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": 40.8,
+      "left": 107.4,
+      "attrs": { "volume": "0.1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 105,
+      "left": 214.2,
+      "rotate": 90,
+      "attrs": { "color": "green", "xray": "1" }
+    },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": -47.8, "left": 432, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -109.2,
+      "left": 724.2,
+      "attrs": { "color": "red", "flip": "1" }
+    },
+    { "type": "wokwi-vcc", "id": "vcc2", "top": -124.04, "left": 633.6, "attrs": {} },
+    { "type": "wokwi-gnd", "id": "gnd2", "top": -19.2, "left": 786.6, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -24.85,
+      "left": 652.8,
+      "attrs": { "value": "1000" }
+    },
+    { "type": "wokwi-potentiometer", "id": "pot2", "top": 248.3, "left": 345.4, "attrs": {} },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd2",
+      "top": -348.8,
+      "left": 168.8,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text1",
+      "top": -374.4,
+      "left": 297.6,
+      "attrs": { "text": "Display" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text2",
+      "top": -153.6,
+      "left": 249.6,
+      "attrs": { "text": "Sensor de Humedad" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text3",
+      "top": -76.8,
+      "left": 489.6,
+      "attrs": { "text": "Rele" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text4",
+      "top": -134.4,
+      "left": 691.2,
+      "attrs": { "text": "Valvula de agua" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text5",
+      "top": 278.4,
+      "left": 432,
+      "attrs": { "text": "Sensor de Luz" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text6",
+      "top": 124.8,
+      "left": 57.6,
+      "attrs": { "text": "Notificacion de riego" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text7",
+      "top": -153.6,
+      "left": 595.2,
+      "attrs": { "text": "Fuente 12 V " }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text8",
+      "top": 38.4,
+      "left": 710.4,
+      "attrs": { "text": "Fuente 3.3 V " }
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "r3:1", "led4:A", "green", [ "v0" ] ],
+    [ "led4:C", "esp:GND.1", "green", [ "v138.64", "h-88.39", "v102.35", "h600.84", "v-182.05" ] ],
+    [ "r3:2", "esp:D2", "green", [ "v99.14", "h278.51", "v-37.5" ] ],
+    [ "esp:GND.1", "bb1:tn.1", "black", [ "h0" ] ],
+    [ "vcc1:VCC", "bb1:tp.50", "red", [ "v0" ] ],
+    [ "gnd1:GND", "bb1:tn.50", "black", [ "v0" ] ],
+    [ "pot1:SIG", "esp:D34", "blue", [ "h-0.4", "v19.2", "h-441.6", "v-86.2" ] ],
+    [ "btn1:2.l", "bb1:tn.16", "black", [ "v0" ] ],
+    [ "btn1:1.l", "esp:D18", "violet", [ "v-192", "h-249.3" ] ],
+    [ "bb1:tp.25", "pot1:VCC", "red", [ "v0" ] ],
+    [ "bz1:1", "bb1:tp.7", "black", [ "v-38.4", "h0.8" ] ],
+    [ "bz1:2", "esp:D21", "gray", [ "v0" ] ],
+    [ "relay1:GND", "bb1:tn.31", "black", [ "h0" ] ],
+    [ "relay1:IN", "esp:D26", "orange", [ "h-576", "v-67.3" ] ],
+    [ "vcc2:VCC", "relay1:COM", "red", [ "v0" ] ],
+    [ "gnd2:GND", "led1:C", "black", [ "v0" ] ],
+    [ "led1:A", "r1:2", "green", [ "h-19.2", "v48" ] ],
+    [ "r1:1", "relay1:NO", "green", [ "v0" ] ],
+    [ "pot1:GND", "bb1:tn.23", "black", [ "v0" ] ],
+    [ "bb1:tp.30", "relay1:VCC", "red", [ "v0" ] ],
+    [ "pot2:GND", "bb1:tn.25", "black", [ "h-38.4", "v-259.1" ] ],
+    [ "pot2:VCC", "bb1:tp.29", "red", [ "h37.6", "v-240", "h-47.2" ] ],
+    [ "esp:D35", "pot2:SIG", "cyan", [ "h28.8", "v470", "h442" ] ],
+    [ "lcd2:GND", "bb1:tn.2", "black", [ "h0" ] ],
+    [ "lcd2:VCC", "bb1:tp.4", "red", [ "h0" ] ],
+    [ "lcd2:SDA", "esp:D23", "green", [ "h0" ] ],
+    [ "lcd2:SCL", "esp:D22", "green", [ "h-153.6", "v144.6" ] ],
+    [ "bz1:1", "bb1:10t.e", "", [ "$bb" ] ],
+    [ "bz1:2", "bb1:11t.e", "", [ "$bb" ] ],
+    [ "btn1:1.l", "bb1:23t.b", "", [ "$bb" ] ],
+    [ "btn1:2.l", "bb1:21t.b", "", [ "$bb" ] ],
+    [ "btn1:1.r", "bb1:23b.g", "", [ "$bb" ] ],
+    [ "btn1:2.r", "bb1:21b.g", "", [ "$bb" ] ]
+  ],
+  "dependencies": {}
+}
