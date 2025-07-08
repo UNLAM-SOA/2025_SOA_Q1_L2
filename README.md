@@ -1,15 +1,16 @@
-# Proyecto IoT - Infraestructura con Docker
+Proyecto SmartGarden – Automatización IoT
 
-Este proyecto forma parte de una solución IoT desarrollada para la cursada de la materia **Sistemas Operativos Avanzados (SOA)** en la Universidad Nacional de La Matanza. El repositorio contiene todos los elementos necesarios para desplegar e integrar una infraestructura completa que recibe datos de sensores, los procesa y los visualiza en tiempo real.
+Este proyecto forma parte del trabajo práctico integrador de la materia Sistemas Operativos Avanzados (SOA) de la Universidad Nacional de La Matanza. El objetivo principal es desarrollar un sistema de riego inteligente basado en tecnologías IoT, que permita monitorear y automatizar el riego de un jardín mediante sensores, una aplicación Android y una infraestructura modular basada en contenedores Docker.
 
-Está dividido en tres partes principales:
-- 📱 **ANDROID**: Código fuente de la aplicación Android para interactuar con el sistema.
-- 🤖 **EMBEBIDO**: Código del microcontrolador ESP32 que lee sensores y publica valores.
-- 🐳 **DockerInfra**: Entorno de infraestructura para backend, procesamiento y visualización.
+El sistema está compuesto por tres grandes partes:
+	•	Embebido (ESP32): se encarga de leer sensores de humedad y luz, y accionar el riego automático o manual según las condiciones ambientales o comandos recibidos por MQTT.
+	•	Aplicación Android: permite visualizar el estado del sistema, consultar históricos y programar riegos automáticos desde el celular.
+	•	Infraestructura Docker: proporciona los servicios centrales para el funcionamiento del ecosistema (broker MQTT, motor de automatización, base de datos y dashboards de monitoreo).
 
+La solución busca ser escalable, segura y de fácil implementación en cualquier entorno doméstico o educativo. Todo el código fuente y la infraestructura están documentados para que puedan ser reutilizados y adaptados.
 ---
 
-## 🧱 Proyecto DockerInfra
+## 🧱 Infraestructura Docker
 
 Este proyecto implementa una arquitectura IoT modular basada en Docker Compose. Incluye los siguientes servicios:
 
