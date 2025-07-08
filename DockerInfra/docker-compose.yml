@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1885:1885"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+
+  node-red:
+    image: nodered/node-red
+    container_name: node-red
+    restart: unless-stopped
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node-red:/data
+    depends_on:
+      - mosquitto
+
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=sensores
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin123
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+    - GF_SERVER_DOMAIN=${GF_SERVER_DOMAIN}
+    - GF_SERVER_ROOT_URL=https://${GF_SERVER_DOMAIN}:4444/grafana/
+    - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    - GF_SECURITY_COOKIE_SECURE=true
+    - GF_SECURITY_COOKIE_SAMESITE=none
+    - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=300ms
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+      - ./grafana.ini:/etc/grafana/grafana.ini

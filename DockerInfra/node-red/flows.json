@@ -1,0 +1,810 @@
+[
+    {
+        "id": "e4bff81adef12edf",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6fcf8d1d3793f9b1",
+        "type": "mqtt-broker",
+        "name": "Mosquitto",
+        "broker": "mosquitto",
+        "port": "1885",
+        "clientid": "ESP32Reader",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "bd9bb69de77f1930",
+        "type": "influxdb",
+        "hostname": "192.168.1.41",
+        "port": 8086,
+        "protocol": "http",
+        "database": "sensores",
+        "name": "Influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "timeout": 10,
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "fb9ec122cde0f26a",
+        "type": "mqtt in",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "topic": "sensor/humedad",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "6fcf8d1d3793f9b1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 340,
+        "wires": [
+            [
+                "060e89758d2320b3"
+            ]
+        ]
+    },
+    {
+        "id": "87f6b4fc5b248805",
+        "type": "influxdb out",
+        "z": "e4bff81adef12edf",
+        "influxdb": "bd9bb69de77f1930",
+        "name": "humedad",
+        "measurement": "humedad",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 760,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "060e89758d2320b3",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "Formatear",
+        "func": "\nlet crudo = parseFloat(msg.payload); // lee el valor crudo\nlet porcentaje = (crudo * 100) / 4086; // normaliza a 0–100\nporcentaje = Math.max(0, Math.min(100, porcentaje)); // limita entre 0 y 100\n\nmsg.payload = porcentaje;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 340,
+        "wires": [
+            [
+                "87f6b4fc5b248805"
+            ]
+        ]
+    },
+    {
+        "id": "c898e6036711a2ad",
+        "type": "inject",
+        "z": "e4bff81adef12edf",
+        "name": "Clima",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 540,
+        "wires": [
+            [
+                "83eb116203be056b"
+            ]
+        ]
+    },
+    {
+        "id": "83eb116203be056b",
+        "type": "http request",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://api.openweathermap.org/data/2.5/weather?q=Buenos+Aires,AR&appid=8f442baee4f301a27ee403bb51fecc7b&units=metric",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 330,
+        "y": 540,
+        "wires": [
+            [
+                "cd9114fdde9d4ea5"
+            ]
+        ]
+    },
+    {
+        "id": "cd9114fdde9d4ea5",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "function 3",
+        "func": "const weather = msg.payload;\n\nmsg.payload = {\n    temperature: weather.main.temp,\n    humidity: weather.main.humidity,\n    pressure: weather.main.pressure\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 540,
+        "wires": [
+            [
+                "44083578f96c37e3"
+            ]
+        ]
+    },
+    {
+        "id": "e2fe78d52576fc9d",
+        "type": "inject",
+        "z": "e4bff81adef12edf",
+        "name": "Clima",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 600,
+        "wires": [
+            [
+                "c3a70ac14be171c7"
+            ]
+        ]
+    },
+    {
+        "id": "c3a70ac14be171c7",
+        "type": "http request",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.openweathermap.org/data/2.5/forecast?units=metric&q=Buenos+Aires,AR&appid=8f442baee4f301a27ee403bb51fecc7b&lang=es",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 330,
+        "y": 600,
+        "wires": [
+            [
+                "11798c5e713d6df8"
+            ]
+        ]
+    },
+    {
+        "id": "11798c5e713d6df8",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "function 5",
+        "func": "let forecast = msg.payload.list;\nconst diasSemana = [\"domingo\", \"lunes\", \"martes\", \"miércoles\", \"jueves\", \"viernes\", \"sábado\"];\nlet lines = [];\n\nforecast.forEach(p => {\n    if (p.pop !== undefined && p.dt_txt) {\n        let date = new Date(p.dt_txt);\n        let timestamp = date.getTime() * 1e6;\n\n        let probabilidad = Math.round(p.pop * 100);\n        let diaSemana = diasSemana[date.getDay()];\n        let fechaStr = p.dt_txt.split(\" \")[0];\n        let horaStr = p.dt_txt.split(\" \")[1].substring(0, 5);\n\n        let line = `pronostico,ciudad=BuenosAires,dia=${diaSemana},fecha=${fechaStr},hora=${horaStr} probabilidad=${probabilidad} ${timestamp}`;\n        lines.push(line);\n    }\n});\n\nmsg.payload = lines.join('\\n');  // Influx acepta múltiples líneas en un solo body\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 600,
+        "wires": [
+            [
+                "85fa53f01605757d"
+            ]
+        ]
+    },
+    {
+        "id": "85fa53f01605757d",
+        "type": "http request",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.1.41:8086/write?db=sensores&precision=ns",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 770,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "44083578f96c37e3",
+        "type": "influxdb out",
+        "z": "e4bff81adef12edf",
+        "influxdb": "bd9bb69de77f1930",
+        "name": "temperatura",
+        "measurement": "temperatura",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 770,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "4833d88bc557874b",
+        "type": "mqtt in",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "topic": "sensor/luz",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "6fcf8d1d3793f9b1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 420,
+        "wires": [
+            [
+                "2f712e05ed91a083"
+            ]
+        ]
+    },
+    {
+        "id": "2f712e05ed91a083",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "Formatear",
+        "func": "\nlet crudo = parseFloat(msg.payload); // lee el valor crudo\nlet porcentaje = (crudo * 100) / 4086; // normaliza a 0–100\nporcentaje = Math.max(0, Math.min(100, porcentaje)); // limita entre 0 y 100\n\nmsg.payload = porcentaje;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 420,
+        "wires": [
+            [
+                "71123bd3980048e2"
+            ]
+        ]
+    },
+    {
+        "id": "71123bd3980048e2",
+        "type": "influxdb out",
+        "z": "e4bff81adef12edf",
+        "influxdb": "bd9bb69de77f1930",
+        "name": "luz",
+        "measurement": "luz",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 750,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "46cf2dc98601e332",
+        "type": "mqtt in",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "topic": "estado/riego",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "6fcf8d1d3793f9b1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 280,
+        "wires": [
+            [
+                "6e38fbf747e17ffa",
+                "4998f058e0564cab"
+            ]
+        ]
+    },
+    {
+        "id": "6e38fbf747e17ffa",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "Formatear",
+        "func": "const valor = parseInt(msg.payload);\nmsg.payload = {\n    value: (valor === 0 || valor === 1) ? valor : 0\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 280,
+        "wires": [
+            [
+                "045a267011a388f0"
+            ]
+        ]
+    },
+    {
+        "id": "045a267011a388f0",
+        "type": "influxdb out",
+        "z": "e4bff81adef12edf",
+        "influxdb": "bd9bb69de77f1930",
+        "name": "riego",
+        "measurement": "riego",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 750,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "63ce4eb67bb706d5",
+        "type": "mqtt out",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "topic": "control/riego",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "6fcf8d1d3793f9b1",
+        "x": 770,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "679756c0a0b0b49a",
+        "type": "mqtt in",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "topic": "programacion/riego",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "6fcf8d1d3793f9b1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 160,
+        "wires": [
+            [
+                "a89100c1843266b3",
+                "4998f058e0564cab"
+            ]
+        ]
+    },
+    {
+        "id": "a89100c1843266b3",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "Guardar Programacion",
+        "func": "// Guardamos en contexto global\nglobal.set(\"programacionRiego\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "146db5cdc304462a",
+        "type": "inject",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 480,
+        "wires": [
+            [
+                "6b62f99489cc8612"
+            ]
+        ]
+    },
+    {
+        "id": "6b62f99489cc8612",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "function 1",
+        "func": "// Obtener la fecha actual y ajustar a GMT-3\nconst ahora = new Date();\nconst ahoraGMT3 = new Date(ahora.getTime() - 3 * 60 * 60 * 1000);\n\nconst programacion = global.get(\"programacionRiego\");\n\nif (!programacion || !programacion.fecha || !programacion.hora) {\n    return null;\n}\n\nconst [anio, mes, dia] = programacion.fecha.split(\"-\").map(Number);\nconst [hora, minuto] = programacion.hora.split(\":\").map(Number);\nconst fechaProgramada = new Date(anio, mes - 1, dia, hora, minuto);\n\nif (programacion.recurrente === \"diario\") {\n    if (\n        ahoraGMT3.getHours() === hora &&\n        ahoraGMT3.getMinutes() === minuto\n    ) {\n        return { payload: 1 };\n    }\n} else if (programacion.recurrente === \"cadaXdias\") {\n    const diasIntervalo = parseInt(programacion.cadaXdias);\n    const fechaInicio = new Date(anio, mes - 1, dia, hora, minuto);\n    const diferenciaDias = Math.floor((ahoraGMT3.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24));\n\n    if (\n        diferenciaDias % diasIntervalo === 0 &&\n        ahoraGMT3.getHours() === hora &&\n        ahoraGMT3.getMinutes() === minuto\n    ) {\n        return { payload: 1 };\n    }\n} else {\n    // una sola vez\n    if (\n        ahoraGMT3.getFullYear() === anio &&\n        ahoraGMT3.getMonth() === mes - 1 &&\n        ahoraGMT3.getDate() === dia &&\n        ahoraGMT3.getHours() === hora &&\n        ahoraGMT3.getMinutes() === minuto\n    ) {\n        global.set(\"programacionRiego\", null);\n        return { payload: 1 };\n    }\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 480,
+        "wires": [
+            [
+                "63ce4eb67bb706d5",
+                "bc0c03b728f6f0b2"
+            ]
+        ]
+    },
+    {
+        "id": "4c835bd6eca5ce49",
+        "type": "mqtt in",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "topic": "app/riego",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "6fcf8d1d3793f9b1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 220,
+        "wires": [
+            [
+                "72ec4e0432f62fdd",
+                "4998f058e0564cab"
+            ]
+        ]
+    },
+    {
+        "id": "72ec4e0432f62fdd",
+        "type": "mqtt out",
+        "z": "e4bff81adef12edf",
+        "name": "",
+        "topic": "control/riego",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "6fcf8d1d3793f9b1",
+        "x": 770,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "432eda93c0df545a",
+        "type": "http in",
+        "z": "e4bff81adef12edf",
+        "name": "Riego_Historico_Android",
+        "url": "/riego_historico",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 210,
+        "y": 740,
+        "wires": [
+            [
+                "bec06893467e8a25"
+            ]
+        ]
+    },
+    {
+        "id": "bec06893467e8a25",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "function 2",
+        "func": "msg.query = `\n  SELECT count(\"value\") \n  FROM \"riego\" \n  WHERE \"value\" = 1 \n  AND time > now() - 5d \n  GROUP BY time(1d) fill(0)\n`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 740,
+        "wires": [
+            [
+                "6cf1663059d52a51"
+            ]
+        ]
+    },
+    {
+        "id": "6cf1663059d52a51",
+        "type": "influxdb in",
+        "z": "e4bff81adef12edf",
+        "influxdb": "bd9bb69de77f1930",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 640,
+        "y": 740,
+        "wires": [
+            [
+                "6dc92acc09194475"
+            ]
+        ]
+    },
+    {
+        "id": "6dc92acc09194475",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "function 4",
+        "func": "let resultados = [];\n\nfor (let i = 0; i < msg.payload.length; i++) {\n    let row = msg.payload[i];\n    resultados.push({\n        fecha: row.time,\n        cantidad: row.count\n    });\n}\n\nmsg.payload = resultados;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 740,
+        "wires": [
+            [
+                "07aa5a543a8c4fb9"
+            ]
+        ]
+    },
+    {
+        "id": "07aa5a543a8c4fb9",
+        "type": "http response",
+        "z": "e4bff81adef12edf",
+        "name": "Response",
+        "statusCode": "",
+        "headers": {},
+        "x": 1080,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "2008b37a207544b4",
+        "type": "http in",
+        "z": "e4bff81adef12edf",
+        "name": "Humedad_Historico_Android",
+        "url": "/humedad_historico",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 220,
+        "y": 800,
+        "wires": [
+            [
+                "26ed6ab39043055e"
+            ]
+        ]
+    },
+    {
+        "id": "26ed6ab39043055e",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "function 6",
+        "func": "msg.query = `\nSELECT MEAN(\"value\") AS \"humedad_promedio\"\nFROM \"humedad\"\nWHERE time > now() - 5d\nGROUP BY time(1d) fill(none)\n`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 800,
+        "wires": [
+            [
+                "aa9ebd598fa63454"
+            ]
+        ]
+    },
+    {
+        "id": "aa9ebd598fa63454",
+        "type": "influxdb in",
+        "z": "e4bff81adef12edf",
+        "influxdb": "bd9bb69de77f1930",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 640,
+        "y": 800,
+        "wires": [
+            [
+                "4a9dee6d8af7c2a1"
+            ]
+        ]
+    },
+    {
+        "id": "4a9dee6d8af7c2a1",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "function 7",
+        "func": "let datos = [];\n\nmsg.payload.forEach(punto => {\n    let fecha = new Date(punto.time).toISOString().substring(5, 10); // \"MM-DD\"\n    datos.push({\n        fecha: fecha,\n        humedad_promedio: Math.round(punto.humedad_promedio * 10) / 10\n    });\n});\n\nmsg.payload = datos;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 800,
+        "wires": [
+            [
+                "a3514708d9fe8367"
+            ]
+        ]
+    },
+    {
+        "id": "a3514708d9fe8367",
+        "type": "http response",
+        "z": "e4bff81adef12edf",
+        "name": "Response",
+        "statusCode": "",
+        "headers": {},
+        "x": 1080,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "4998f058e0564cab",
+        "type": "debug",
+        "z": "e4bff81adef12edf",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "bc0c03b728f6f0b2",
+        "type": "debug",
+        "z": "e4bff81adef12edf",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "0cf1cc229cb384ed",
+        "type": "debug",
+        "z": "e4bff81adef12edf",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1020,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "69f6d690b95ebbc2",
+        "type": "function",
+        "z": "e4bff81adef12edf",
+        "name": "function 8",
+        "func": "node.warn(new Date().toString())\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 60,
+        "wires": [
+            [
+                "0cf1cc229cb384ed"
+            ]
+        ]
+    }
+]

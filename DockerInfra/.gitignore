@@ -1,0 +1,10 @@
+# Archivos que no queremos subir
+*.zip
+node_modules/
+*.log
+*.tmp
+*.bak
+*.swp
+__pycache__/
+.env
+
