@@ -1,16 +1,17 @@
-Proyecto SmartGarden – Automatización IoT
+# Proyecto SmartGarden – Automatización IoT
 
-Este proyecto forma parte del trabajo práctico integrador de la materia Sistemas Operativos Avanzados (SOA) de la Universidad Nacional de La Matanza. El objetivo principal es desarrollar un sistema de riego inteligente basado en tecnologías IoT, que permita monitorear y automatizar el riego de un jardín mediante sensores, una aplicación Android y una infraestructura modular basada en contenedores Docker.
+Este proyecto forma parte del trabajo práctico integrador de la materia **Sistemas Operativos Avanzados (SOA)** de la Universidad Nacional de La Matanza. El objetivo principal es desarrollar un sistema de riego inteligente basado en tecnologías **IoT**, que permita monitorear y automatizar el riego de un jardín mediante sensores, una aplicación Android y una infraestructura modular basada en contenedores Docker.
 
 El sistema está compuesto por tres grandes partes:
-	•	Embebido (ESP32): se encarga de leer sensores de humedad y luz, y accionar el riego automático o manual según las condiciones ambientales o comandos recibidos por MQTT.
-	•	Aplicación Android: permite visualizar el estado del sistema, consultar históricos y programar riegos automáticos desde el celular.
-	•	Infraestructura Docker: proporciona los servicios centrales para el funcionamiento del ecosistema (broker MQTT, motor de automatización, base de datos y dashboards de monitoreo).
 
-La solución busca ser escalable, segura y de fácil implementación en cualquier entorno doméstico o educativo. Todo el código fuente y la infraestructura están documentados para que puedan ser reutilizados y adaptados.
+- **Embebido (ESP32)**: Se encarga de leer sensores de humedad y luz, y accionar el riego automático o manual según las condiciones ambientales o comandos recibidos por MQTT.
+- **Aplicación Android**: Permite visualizar el estado del sistema, consultar históricos y programar riegos automáticos desde el celular.
+- **Infraestructura Docker**: Proporciona los servicios centrales para el funcionamiento del ecosistema (broker MQTT, motor de automatización, base de datos y dashboards de monitoreo).
+
+La solución busca ser escalable, segura y de fácil implementación en cualquier entorno doméstico o educativo. Todo el código fuente y la infraestructura están documentados para que puedan ser reutilizados y adaptados por otros estudiantes o entusiastas del IoT.
 ---
 
-## 🧱 Infraestructura Docker
+## 🧱 Proyecto DockerInfra
 
 Este proyecto implementa una arquitectura IoT modular basada en Docker Compose. Incluye los siguientes servicios:
 
