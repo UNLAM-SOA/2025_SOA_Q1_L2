@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_garden">
+
+    <!-- Contenido principal -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp">
+
+        <!-- Botón menú -->
+        <ImageButton
+            android:id="@+id/btnMenu"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Abrir menú"
+            android:src="@drawable/menuu"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/black" />
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📅 Programar Riego"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnMenu"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Formulario -->
+        <LinearLayout
+            android:id="@+id/layoutFormulario"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:padding="16dp"
+            android:elevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/titulo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Fecha -->
+            <TextView
+                android:id="@+id/textFecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📆 Seleccionar Fecha"
+                android:textSize="18sp"
+                android:padding="12dp"
+                android:background="@drawable/bg_field"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Hora -->
+            <TextView
+                android:id="@+id/textHora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="⏰ Seleccionar Hora"
+                android:textSize="18sp"
+                android:padding="12dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_field"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Recurrente Switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:id="@+id/textRecurrente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔁 Riego recurrente"
+                    android:textSize="18sp"
+                    android:layout_marginEnd="16dp" />
+
+                <Switch
+                    android:id="@+id/switchRecurrente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Spinner -->
+            <Spinner
+                android:id="@+id/spinnerFrecuencia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_field"
+                android:spinnerMode="dropdown" />
+
+            <!-- Cada cuántos días -->
+            <EditText
+                android:id="@+id/editCadaDias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Cada cuántos días (ej: 2)"
+                android:inputType="number"
+                android:textSize="18sp"
+                android:padding="12dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_field" />
+
+            <!-- Botón -->
+            <Button
+                android:id="@+id/btnConfirmar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="✅ Programar Riego"
+                android:textSize="18sp"
+                android:backgroundTint="@color/green"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Menú lateral -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_menu"
+        app:headerLayout="@layout/nav_header_main" />
+</androidx.drawerlayout.widget.DrawerLayout>

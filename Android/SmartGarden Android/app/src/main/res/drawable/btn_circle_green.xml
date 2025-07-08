@@ -1,0 +1,19 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Estado presionado -->
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/garden_green_dark" />
+            <size android:width="200dp" android:height="200dp"/>
+            <corners android:radius="100dp"/>
+        </shape>
+    </item>
+
+    <!-- Estado normal -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/garden_green" />
+            <size android:width="200dp" android:height="200dp"/>
+            <corners android:radius="100dp"/>
+        </shape>
+    </item>
+</selector>
